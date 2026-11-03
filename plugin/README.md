@@ -1,0 +1,78 @@
+# JobAgento — Claude Code plugin
+
+A team of agents that finds jobs, tailors your CV and cover letter for each one,
+fact-checks them against your real CV, builds print-ready files, and fills the
+application form for you to send. It runs in your own Claude Code, on your own
+Claude plan. Your data (CV, jobs, drafts, learned rules) lives on the hosted
+JobAgento server, behind your login.
+
+## What you need
+
+- Claude Code
+- Python 3.10+, Google Chrome, Node.js (for the browser tools), and poppler
+  (`brew install poppler` on macOS, `apt install poppler-utils` on Debian/Ubuntu)
+- A JobAgento account: you create it the first time you sign in
+
+The plugin checks these when a session starts and tells you what is missing.
+It keeps its own small Python environment in its data folder; nothing is
+installed into your Python.
+
+## Install
+
+```
+/plugin marketplace add MNKanout/jobagento
+/plugin install jobagento@jobagento
+```
+
+Then sign in: run `/mcp`, choose the jobagento plugin's **jobs** server, and follow the browser. You type
+your email, get a code, type the code. That is your account.
+
+Then run `/jobagento:setup`. It asks for your CV (a PDF, Word or text file), your
+contact details, the job titles and countries to search, and optionally a few
+of your own cover letters and a photo. Run it again whenever something changes.
+
+## Use
+
+| Command | What it does |
+|---|---|
+| `/jobagento:setup` | Your CV, contact details, job titles, countries, examples, photo |
+| `/jobagento:add-source <url or file>` | Add a project or role to your CV from a repo, website or file |
+| `/jobagento:status` | Signed in? Subscription? Setup complete? |
+| `/jobagento:find-and-apply [country]` | One full run: find, score, write, check, build, fill the form |
+| `/jobagento:apply-url <url>` | The same for one posting you found |
+| `/jobagento:pending` | One line: what waits on you |
+| `/jobagento:catch-up` | The newest run in detail |
+| `/jobagento:submit <job>` | Fill a built job's form for you to send |
+| `/jobagento:mark-applied <job>` | You sent it (or applied by hand) |
+| `/jobagento:set-status <status> <job>...` | Mark jobs open, applied, expired (the ad closed) or apply manually |
+| `/jobagento:check-expired` | Check whether the ads waiting on you have closed, then mark them expired |
+| `/jobagento:mark-template <family> <job> [label]` | Make a job's built CV the starting point for that kind of role |
+| `/jobagento:review-feedback` | Approve or reject the lessons the agents learned |
+| `/jobagento:write-cv`, `/jobagento:write-coverLetter`, `/jobagento:qa`, `/jobagento:verify`, `/jobagento:build-cv-coverletter` | Run one step for one job |
+| `/jobagento:browser-login [url]` | Log in to a job platform once in the plugin's Chrome |
+| `/jobagento:delete-account` | Delete your account and all its data, for good |
+
+**Your data.** It is stored in the EU (Supabase, Ireland). See the privacy policy and terms at
+https://mcp.jobagento.com/privacy and `/terms`.
+
+**It never sends an application.** The submitter fills the form in a visible
+Chrome window and stops before the send button. You check it and press send.
+
+Built files go to `job-app/builds/<role>-<date>/` in the folder you run Claude Code from (set `JOBAPP_HOME` to use another folder). Open `cv.html` in a
+browser and print it to PDF if you want one.
+
+## How it fits together
+
+- `agents/`, `commands/`, `ORCHESTRATOR.md`: the prompts. The main session
+  reads `ORCHESTRATOR.md` and hands each step to an agent.
+- `.mcp.json`: the hosted **jobs** server (all your data, through typed tools)
+  and local browser servers: **playwright**, the visible Chrome the submitter
+  fills forms in (with your logins), and hidden ones that never open a window:
+  **finder1** to **finder3** for searching, **print** for the print check.
+- `scripts/`: the local scripts the agents run (rendering and print checks need
+  Chrome on your machine). They are copies; the source is the repository's
+  `scripts/`, synced with `python3 scripts/sync_plugin.py`.
+- `hooks/setup_env.py`: the session-start check and Python environment.
+
+The server, its tools and its security model are described in
+[`mcp-server/README.md`](../mcp-server/README.md).
