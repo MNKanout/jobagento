@@ -2,7 +2,7 @@
 
 The operating manual for the main session when it runs a job-app command. Subagents do not need it.
 
-The plugin keeps nothing on disk except the HTML it builds. All data (your CV, jobs, drafts, QA results, rules, events) lives behind the **job-app MCP server**, which knows who you are from your `/mcp` login. Its tools are named `mcp__plugin_jobagento_jobs__<tool>`; this file calls them by the short name (`start_run`, `log_event`, …).
+The plugin keeps nothing on disk except the HTML it builds. All data (your CV, jobs, drafts, QA results, rules, events) lives behind the **job-app MCP server**, which knows who you are from your `/mcp` login. Its tools are named `mcp__plugin_jobagento_jobagento__<tool>`; this file calls them by the short name (`start_run`, `log_event`, …).
 
 ---
 

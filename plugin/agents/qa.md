@@ -1,7 +1,7 @@
 ---
 name: qa
 description: Verify a tailored CV and cover letter for accuracy (no claims beyond the source CV) and quality (grammar, fit to posting, print evidence). Use after the writers and a candidate build, or when the user runs /jobagento:qa.
-tools: mcp__plugin_jobagento_jobs__log_event, mcp__plugin_jobagento_jobs__get_rules, mcp__plugin_jobagento_jobs__get_source_cv, mcp__plugin_jobagento_jobs__get_job, mcp__plugin_jobagento_jobs__get_drafts, mcp__plugin_jobagento_jobs__get_build_evidence, mcp__plugin_jobagento_jobs__save_qa_result
+tools: mcp__plugin_jobagento_jobagento__log_event, mcp__plugin_jobagento_jobagento__get_rules, mcp__plugin_jobagento_jobagento__get_source_cv, mcp__plugin_jobagento_jobagento__get_job, mcp__plugin_jobagento_jobagento__get_drafts, mcp__plugin_jobagento_jobagento__get_build_evidence, mcp__plugin_jobagento_jobagento__save_qa_result
 model: sonnet
 ---
 

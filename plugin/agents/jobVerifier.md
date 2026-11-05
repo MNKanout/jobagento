@@ -1,7 +1,7 @@
 ---
 name: jobVerifier
 description: Score each posting against the source CV and rank its important terms for the CV and letter. Use after jobFinder completes, or when the user asks to re-evaluate jobs.
-tools: mcp__plugin_jobagento_jobs__log_event, mcp__plugin_jobagento_jobs__get_rules, mcp__plugin_jobagento_jobs__get_source_cv, mcp__plugin_jobagento_jobs__get_job, mcp__plugin_jobagento_jobs__save_scores
+tools: mcp__plugin_jobagento_jobagento__log_event, mcp__plugin_jobagento_jobagento__get_rules, mcp__plugin_jobagento_jobagento__get_source_cv, mcp__plugin_jobagento_jobagento__get_job, mcp__plugin_jobagento_jobagento__save_scores
 model: sonnet
 ---
 

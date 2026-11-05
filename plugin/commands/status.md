@@ -4,7 +4,7 @@ description: Check the job-app connection - signed in, subscription, setup, and 
 
 Do not spawn any agent.
 
-1. `account`. If the job-app tools are missing or answer `not_authenticated`: say "Not signed in. Run /mcp, choose the jobagento plugin's jobs server, and sign in with your email." and stop.
+1. `account`. If the job-app tools are missing or answer `not_authenticated`: say "Not signed in. Run /mcp, choose the jobagento plugin's jobagento server, and sign in with your email." and stop.
 2. `get_settings`.
 3. Answer in a short list:
    - Signed in as `<email>`; the plan (`plan`: Free, Plus, Pro or Ultra) and, for a paid plan, its billing status.

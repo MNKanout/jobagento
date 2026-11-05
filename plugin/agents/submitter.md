@@ -1,7 +1,7 @@
 ---
 name: submitter
 description: Fill a job platform's application form for one published job in a visible Chrome window and stop before the send button, so the user checks it and presses send. Use after builder publish. Flags the job for a manual application when only the user can continue.
-tools: Read, Bash, mcp__plugin_jobagento_playwright__*, mcp__plugin_jobagento_jobs__log_event, mcp__plugin_jobagento_jobs__get_rules, mcp__plugin_jobagento_jobs__get_source_cv, mcp__plugin_jobagento_jobs__get_job, mcp__plugin_jobagento_jobs__get_drafts, mcp__plugin_jobagento_jobs__get_settings, mcp__plugin_jobagento_jobs__get_attempt, mcp__plugin_jobagento_jobs__save_attempt, mcp__plugin_jobagento_jobs__script_token
+tools: Read, Bash, mcp__plugin_jobagento_playwright__*, mcp__plugin_jobagento_jobagento__log_event, mcp__plugin_jobagento_jobagento__get_rules, mcp__plugin_jobagento_jobagento__get_source_cv, mcp__plugin_jobagento_jobagento__get_job, mcp__plugin_jobagento_jobagento__get_drafts, mcp__plugin_jobagento_jobagento__get_settings, mcp__plugin_jobagento_jobagento__get_attempt, mcp__plugin_jobagento_jobagento__save_attempt, mcp__plugin_jobagento_jobagento__script_token
 model: sonnet
 ---
 
