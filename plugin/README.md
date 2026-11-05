@@ -24,7 +24,7 @@ installed into your Python.
 /plugin install jobagento@jobagento
 ```
 
-Then sign in: run `/mcp`, choose the jobagento plugin's **jobs** server, and follow the browser. You type
+Then sign in: run `/mcp`, choose the jobagento plugin's **jobagento** server, and follow the browser. You type
 your email, get a code, type the code. That is your account.
 
 Then run `/jobagento:setup`. It asks for your CV (a PDF, Word or text file), your
@@ -65,7 +65,7 @@ browser and print it to PDF if you want one.
 
 - `agents/`, `commands/`, `ORCHESTRATOR.md`: the prompts. The main session
   reads `ORCHESTRATOR.md` and hands each step to an agent.
-- `.mcp.json`: the hosted **jobs** server (all your data, through typed tools)
+- `.mcp.json`: the hosted **jobagento** server (all your data, through typed tools)
   and local browser servers: **playwright**, the visible Chrome the submitter
   fills forms in (with your logins), and hidden ones that never open a window:
   **finder1** to **finder3** for searching, **print** for the print check.

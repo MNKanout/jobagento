@@ -33,7 +33,7 @@ You need Claude Code, Python 3.10+, Google Chrome, Node.js and poppler. The plug
    /plugin marketplace add MNKanout/jobagento
    /plugin install jobagento@jobagento
    ```
-2. Sign in: run `/mcp`, choose the jobagento plugin's **jobs** server, and enter your email and the code you get.
+2. Sign in: run `/mcp`, choose the jobagento plugin's **jobagento** server, and enter your email and the code you get.
 3. Run `/jobagento:setup` once: your CV, contact details, job titles and countries.
 4. Start a run with `/jobagento:find-and-apply`.
 

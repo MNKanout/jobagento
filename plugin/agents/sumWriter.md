@@ -1,7 +1,7 @@
 ---
 name: sumWriter
 description: Compose a human-readable summary of a pipeline run from its stored data, save it on the run, and close the run. Use at the end of a run, on interruption, or when the user wants a recap.
-tools: mcp__plugin_jobagento_jobs__log_event, mcp__plugin_jobagento_jobs__get_rules, mcp__plugin_jobagento_jobs__get_run, mcp__plugin_jobagento_jobs__end_run
+tools: mcp__plugin_jobagento_jobagento__log_event, mcp__plugin_jobagento_jobagento__get_rules, mcp__plugin_jobagento_jobagento__get_run, mcp__plugin_jobagento_jobagento__end_run
 model: haiku
 ---
 

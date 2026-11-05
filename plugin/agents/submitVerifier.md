@@ -1,7 +1,7 @@
 ---
 name: submitVerifier
 description: Check a job application form that submitter filled, field by field, before the user sends it. Use after submitter, and again after every correction. Passes the form, or returns the issues submitter must fix.
-tools: Read, mcp__plugin_jobagento_jobs__log_event, mcp__plugin_jobagento_jobs__get_rules, mcp__plugin_jobagento_jobs__get_source_cv, mcp__plugin_jobagento_jobs__get_job, mcp__plugin_jobagento_jobs__get_drafts, mcp__plugin_jobagento_jobs__get_settings, mcp__plugin_jobagento_jobs__get_attempt, mcp__plugin_jobagento_jobs__save_attempt
+tools: Read, mcp__plugin_jobagento_jobagento__log_event, mcp__plugin_jobagento_jobagento__get_rules, mcp__plugin_jobagento_jobagento__get_source_cv, mcp__plugin_jobagento_jobagento__get_job, mcp__plugin_jobagento_jobagento__get_drafts, mcp__plugin_jobagento_jobagento__get_settings, mcp__plugin_jobagento_jobagento__get_attempt, mcp__plugin_jobagento_jobagento__save_attempt
 model: opus
 ---
 

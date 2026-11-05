@@ -1,6 +1,6 @@
 {
   "mcpServers": {
-    "jobs": {
+    "jobagento": {
       "type": "http",
       "url": "https://mcp.jobagento.com/mcp"
     },

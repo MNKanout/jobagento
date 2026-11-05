@@ -7,7 +7,7 @@ Walk the user through setup one step at a time, in plain words. Keep each messag
 
 ## 0. Signed in?
 
-Call `account`. If the job-app tools are missing or answer `not_authenticated`, say: "First sign in: run `/mcp`, choose the jobagento plugin's **jobs** server, and sign in with your email. Then run `/jobagento:setup` again." and stop.
+Call `account`. If the job-app tools are missing or answer `not_authenticated`, say: "First sign in: run `/mcp`, choose the jobagento plugin's **jobagento** server, and sign in with your email. Then run `/jobagento:setup` again." and stop.
 
 Then call `get_settings` and `get_source_cv(list_only: true)` to see what already exists. If setup is complete, show a one-screen summary and ask which part to change; go only through those parts.
 

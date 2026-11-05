@@ -4,7 +4,7 @@ description: Delete your job-app account and all its data, for good
 
 Do not spawn any agent. This cannot be undone, so go one step at a time and never fill in the confirmation yourself.
 
-1. `account`. If the job-app tools are missing or answer `not_authenticated`: say "Not signed in. Run /mcp, choose the jobagento plugin's jobs server, and sign in with your email." and stop.
+1. `account`. If the job-app tools are missing or answer `not_authenticated`: say "Not signed in. Run /mcp, choose the jobagento plugin's jobagento server, and sign in with your email." and stop.
 2. Say, in plain words, what will be deleted from the job-app server: the CV and its sections, contact details, settings, example letters, photo, every run, job, CV and letter draft, QA result, application record, personal rule, uploaded file, and the login itself. Global rules are not personal and stay. Files on this computer (the `job-app/builds` folder) are not touched; the user can delete that folder themselves. Backups on the server roll off within 7 days.
 3. Ask the user to type their account email (`<email>` from step 1) to confirm. Wait for their answer. If they type anything else, or say no, stop: nothing is deleted.
 4. Call `delete_my_data` with `confirm` set to exactly what the user typed.

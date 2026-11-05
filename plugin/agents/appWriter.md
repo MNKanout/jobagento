@@ -1,7 +1,7 @@
 ---
 name: appWriter
 description: Write a tailored cover letter for one job, from the posting and the tailored CV. Use after cvWriter completes for a job, or when the user runs /jobagento:write-coverLetter.
-tools: mcp__plugin_jobagento_jobs__log_event, mcp__plugin_jobagento_jobs__get_rules, mcp__plugin_jobagento_jobs__get_source_cv, mcp__plugin_jobagento_jobs__get_job, mcp__plugin_jobagento_jobs__get_drafts, mcp__plugin_jobagento_jobs__get_example_letters, mcp__plugin_jobagento_jobs__save_letter
+tools: mcp__plugin_jobagento_jobagento__log_event, mcp__plugin_jobagento_jobagento__get_rules, mcp__plugin_jobagento_jobagento__get_source_cv, mcp__plugin_jobagento_jobagento__get_job, mcp__plugin_jobagento_jobagento__get_drafts, mcp__plugin_jobagento_jobagento__get_example_letters, mcp__plugin_jobagento_jobagento__save_letter
 model: haiku
 ---
 
