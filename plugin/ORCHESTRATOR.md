@@ -9,7 +9,7 @@ The plugin keeps nothing on disk except the HTML it builds. All data (your CV, j
 ## Hard rules (for you and every agent)
 
 - Only the job-app tools touch the data. Never look for a database, a key or a config file, and never write your own script.
-- If a tool you need is missing, denied or failing, stop and escalate: `ESCALATION: <tool>_unavailable`. If a job-app tool answers `subscription_required`, stop and tell the user to check `/jobagento:setup`. If `save_postings` answers `run_closed`, the run has ended or is over 24 hours old: finish it and start a new one rather than reopening it. `run_full` means the run took its maximum of jobs: finish it with what it has. If `start_run` answers `run_limit_reached`, stop and tell the user their plan's jobs for today are used up, when they reset (`/jobagento:status` shows it), and that a bigger plan is on the website's pricing page. If it answers `not_authenticated`, tell the user to run `/mcp`, pick the jobagento plugin's `jobs` server, and sign in again.
+- If a tool you need is missing, denied or failing, stop and escalate: `ESCALATION: <tool>_unavailable`. If a job-app tool answers `subscription_required`, stop and tell the user to check `/jobagento:setup`. If `save_postings` answers `run_closed`, the run has ended or is over 24 hours old: finish it and start a new one rather than reopening it. `run_full` means the run took its maximum of jobs: finish it with what it has. If `start_run` answers `run_limit_reached`, stop and tell the user their plan's jobs for today are used up, when they reset (`/jobagento:status` shows it), and that a bigger plan is on the website's pricing page. If it answers `not_authenticated`, tell the user to run `/mcp`, pick the jobagento plugin's `jobagento` server, and sign in again.
 - Pass `run_id` + `job_id` between agents, never file contents.
 - Never claim an application was sent. Auto-submit is off: the submitter fills the form in a visible browser and stops, and **the user presses send**. Afterwards the user runs `/jobagento:mark-applied <job>`.
 - A new rule is staged with `stage_rule` and does nothing until the user approves it with `/jobagento:review-feedback`.
@@ -21,7 +21,7 @@ The plugin keeps nothing on disk except the HTML it builds. All data (your CV, j
 
 The agents are this plugin's own. Spawn them by their full name, `jobagento:<agent>` (`jobagento:jobFinder`, `jobagento:cvWriter`, `jobagento:qa`, …), so a project's own agent of the same name is never picked instead. This file names them without the prefix.
 
-Each agent's model comes from the database, not from its file. Before the first agent in a command, call `get_settings` once, then pass `model: agent_models[<agent>]` on every Agent call (`model: agent_models["cvWriter"]` for cvWriter). An agent started without it is refused.
+Each agent's model comes from the database, not from its file. Before the first agent in a command, call `get_settings` once, then pass `model: agent_models[<agent>]` on every Agent call (`model: agent_models["cvWriter"]` for cvWriter). An agent started without it is refused: that is not a reason to escalate. Call `get_settings` and start the agent again with its model, never one you choose yourself.
 
 ## Your role
 

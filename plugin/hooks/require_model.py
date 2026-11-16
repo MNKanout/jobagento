@@ -34,7 +34,7 @@ def decide(event: dict) -> str | None:
         return None
     name = agent[len(PREFIX):]
     return (f"Start {agent} with its model from the database: call get_settings (once per command) and pass "
-            f"model: agent_models['{name}'] (one of {', '.join(sorted(MODELS))}).")
+            f"model: agent_models['{name}']. Use that value, not a model you choose, then start the agent again.")
 
 
 def main() -> None:
