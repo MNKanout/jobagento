@@ -13,6 +13,16 @@
     ],
     "PreToolUse": [
       {
+        "matcher": "Agent|Task",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}\"/hooks/require_model.py",
+            "timeout": 10
+          }
+        ]
+      },
+      {
         "matcher": "mcp__plugin_jobagento_.*__browser_run_code_unsafe",
         "hooks": [
           {

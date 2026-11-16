@@ -6,7 +6,7 @@ argument-hint: "<github-url | website-url | /path/to/file>"
 The input is `$ARGUMENTS`. If it is empty, ask: "What would you like to add? A URL (GitHub repo, project website) or a local file path."
 
 1. **Check the input:** a URL must parse; a file path must exist. Otherwise ask the user to clarify.
-2. **Spawn `sourceUpdater`** with `input`.
+2. **Spawn `sourceUpdater`** with `input`, and with `model: agent_models["sourceUpdater"]` from `get_settings`.
 3. It returns what it found, the changes it proposes, and its questions. **Save nothing until every question is answered**; relay the answers to the same agent and let it update its proposal.
 4. **Show the proposal** clearly: which sections change, what is added, what already exists and is skipped.
 5. **Ask:** "Save these changes? (yes / no / edit)"
