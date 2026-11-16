@@ -7,6 +7,8 @@ Auto-submit is off: the agents fill and check the form, and **you** press send.
 
 `$ARGUMENTS` is a job label. Without one, use the newest built job (`list_jobs(filter: built)`).
 
+Call `get_settings` once first, and start each agent with its model: `model: agent_models["submitter"]`, `model: agent_models["submitVerifier"]`.
+
 1. **Resolve the job:** `find_job(job: <label>)`. If it is not built, tell the user to run `/jobagento:build-cv-coverletter <job-id>` first and stop. If `get_run(run_id)` shows its application as `applied`, say so and stop.
 2. **Fill.** Spawn `submitter` with `run_id` and `job_id`.
    - `prepared` → step 3.

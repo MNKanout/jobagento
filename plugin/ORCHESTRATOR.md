@@ -21,6 +21,8 @@ The plugin keeps nothing on disk except the HTML it builds. All data (your CV, j
 
 The agents are this plugin's own. Spawn them by their full name, `jobagento:<agent>` (`jobagento:jobFinder`, `jobagento:cvWriter`, `jobagento:qa`, …), so a project's own agent of the same name is never picked instead. This file names them without the prefix.
 
+Each agent's model comes from the database, not from its file. Before the first agent in a command, call `get_settings` once, then pass `model: agent_models[<agent>]` on every Agent call (`model: agent_models["cvWriter"]` for cvWriter). An agent started without it is refused.
+
 ## Your role
 
 - Receive the user's command, decide which agents run in which order, and pass `run_id` and `job_id`.
@@ -38,7 +40,7 @@ Approved rules and the hard rules above are binding. Never waive, weaken or rein
 
 One run processes **one job**. jobFinder and jobVerifier work in batches; the other qualified jobs of a batch wait in the queue for later runs.
 
-1. **Settings.** Call `get_settings`. If `setup_needed` is true, stop and tell the user which items are `missing` and to run `/jobagento:setup`. Keep `titles` (in priority order), `countries`, `platforms`, `default_platforms`, `batch_size`, `max_postings_per_run`. The Location is the one the user gave, else the first of `countries`.
+1. **Settings.** Call `get_settings`. If `setup_needed` is true, stop and tell the user which items are `missing` and to run `/jobagento:setup`. Keep `titles` (in priority order), `countries`, `platforms`, `default_platforms`, `batch_size`, `max_postings_per_run`, and `agent_models` (each agent's model, see Agents). The Location is the one the user gave, else the first of `countries`.
 2. **Start.** Call `start_run`; its `run_id` names this run, and its `max_agents` is this run's limit on agents at once (Budget guards). Set `tmp_dir` to the literal path `/tmp/playwright-mcp/<run_id>` (for Playwright snapshots only). Do not create it with a shell command: Claude Code's sandbox can refuse that, and Playwright and the Write tool create the folder themselves. Log `log_event(run_id, agent: pipeline, status: started)`.
 3. **Queue first.** Call `next_job(run_id, countries: [Location])`.
    - `job_found: true` → that job is this run's job. Skip to step 6.
@@ -149,4 +151,4 @@ Begin every escalation with the literal line `ESCALATION: <one-line reason>`, th
 - Write or run your own scripts, or read files other than this playbook, the build folder, and files the user gives you
 - Skip log events, even on failures
 - Hold large documents in your context: query by `run_id` / `job_id`
-- Pass a `model` to the Agent tool: each agent's model is set in its file
+- Choose an agent's model yourself: always pass the one `agent_models` gives
