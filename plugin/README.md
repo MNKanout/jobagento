@@ -72,7 +72,9 @@ browser and print it to PDF if you want one.
 - `scripts/`: the local scripts the agents run (rendering and print checks need
   Chrome on your machine). They are copies; the source is the repository's
   `scripts/`, synced with `python3 scripts/sync_plugin.py`.
-- `hooks/setup_env.py`: the session-start check and Python environment.
+- `hooks/`: the session-start check and Python environment (`setup_env.py`),
+  the print-check permission (`allow_print.py`), and the check that every
+  agent starts on the model your account gives it (`require_model.py`).
 
 The server, its tools and its security model are described in
 [`mcp-server/README.md`](../mcp-server/README.md).

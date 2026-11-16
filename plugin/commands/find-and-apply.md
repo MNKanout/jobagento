@@ -14,4 +14,4 @@ Run the full pipeline (its section "Pipeline") for one job:
 5. Present the outcome: **Ready to send** (where the filled form is open, and to run `/jobagento:mark-applied <job_id>` after sending) or **Apply manually** with the note and link, plus the local HTML paths.
 6. Count the tokens (the playbook's step 10), then sumWriter, at the end or on interruption.
 
-Enforce every budget guard. If a job-app tool answers `not_authenticated`, tell the user to run `/mcp`, pick the jobagento plugin's `jobs` server, and sign in; on `subscription_required`, point them to `/jobagento:setup`; on `run_limit_reached`, say the plan's jobs for today are used up and point them to `/jobagento:status`.
+Enforce every budget guard. If a job-app tool answers `not_authenticated`, tell the user to run `/mcp`, pick the jobagento plugin's `jobagento` server, and sign in; on `subscription_required`, point them to `/jobagento:setup`; on `run_limit_reached`, say the plan's jobs for today are used up and point them to `/jobagento:status`.
