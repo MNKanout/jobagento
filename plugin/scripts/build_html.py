@@ -473,7 +473,7 @@ def document_name(title: str, company: str, kind: str) -> str:
     printing. "Kari Nordmann - Deployment Strategist - Acme - CV": a
     reader's download folder of "cv.pdf" files says nothing about whose CV
     it is or which job it was for."""
-    parts = [NAME, plain_role_title(title or ""), company or "", kind]
+    parts = [NAME, title or "", company or "", kind]
     cleaned = [" ".join(UNSAFE_FILENAME_RE.sub(" ", p).split()) for p in parts]
     return " - ".join(p for p in cleaned if p)
 
@@ -723,11 +723,6 @@ def markdown_to_cv_html(markdown_text: str) -> str:
     return "\n".join(sections)
 
 
-TITLE_PREFIX_RE = re.compile(r'^(re|ref|vedr|ang[aå]ende|emne)\s*:\s*', re.I)
-# A job board's ad code at the end of a title: "(123456)", "(#123456)" or
-# "(<board> 123456)". Six digits or more, so "(ISO 27001)" or "(Oslo 2025)"
-# stay part of the title.
-AD_CODE_RE = re.compile(r'\s*\(\s*(?:[A-Za-zÆØÅæøå.]+)?[\s#:-]*\d{6,}\s*\)\s*$', re.I)
 _DATE_TOKEN = (
     r'\d{4}-\d{2}-\d{2}'
     r'|\d{1,2}\.\d{1,2}\.\d{4}'  # DD.MM.YYYY / D.M.YYYY (Norwegian/German numeric)
@@ -747,29 +742,75 @@ CLOSING_WORDS_RE = re.compile(
 )
 
 
-SENIORITY_PREFIX_RE = re.compile(r'^(senior|sr\.?|lead|principal|staff|junior|jr\.?)\s+', re.I)
+# A line under the CV's name that is how to reach the person, not a title.
+CONTACT_LINE_RE = re.compile(r'@|\||https?://|www\.|linkedin|github|\d[\d\s+()-]{6,}\d', re.I)
 
 
-def plain_role_title(raw_title: str) -> str:
-    """Self-label as the plain role title: drop a seniority prefix ('Senior',
-    'Lead', ...) and a trailing ' — <team/unit>' / ' - <team/unit>' qualifier.
-    Applied to both the CV's role_title and the cover letter's title so the
-    two never disagree — e.g. jobs.title "Senior Data Scientist — Data Cloud
-    Acceleration" becomes "Data Scientist" in both places."""
-    title = raw_title.strip()
-    title = re.split(r'\s+[—–-]\s+', title, maxsplit=1)[0].strip()
-    title = SENIORITY_PREFIX_RE.sub("", title).strip()
-    return title or raw_title.strip()
+def cv_draft_title(cv_markdown: str) -> str | None:
+    """The title line cvWriter wrote under the name, verbatim: the first
+    line after `# <Name>`, before the first `## ` section, that is not the
+    contact line. Only markdown emphasis around it (`**...**`) is removed.
+    None when the draft has no such line."""
+    lines = cv_markdown.split("\n")
+    start = next((i for i, line in enumerate(lines) if line.startswith("# ")), None)
+    if start is None:
+        return None
+    for line in lines[start + 1:]:
+        text = line.strip()
+        if text.startswith("## "):
+            return None
+        if not text or set(text) <= set("-*_") or CONTACT_LINE_RE.search(text):
+            continue
+        return re.sub(r'^(\*\*|__|\*|_)(.+?)\1$', r'\2', text).strip() or None
+    return None
 
 
-def clean_letter_title(title: str) -> str:
-    # Builder rule 2026-09-14 "Clean letter title and recipient formatting
-    # without prefixes": no 'Re:' prefixes or job-board ad-code suffixes. Also run
-    # through plain_role_title() so a stale 'Senior ...' title surviving in
-    # older markdown is caught here too, not just at the CV header.
-    title = TITLE_PREFIX_RE.sub("", title.strip())
-    title = AD_CODE_RE.sub("", title)
-    return plain_role_title(title.strip())
+def required_cv_title(cv_markdown: str) -> str:
+    """The CV's title, which the header, both page titles and both PDF names
+    show. It is the draft's own title line, which QA approved: the builder
+    never writes, cleans or picks a title itself. A draft without one goes
+    back to cvWriter (and then QA) rather than being given one here."""
+    title = cv_draft_title(cv_markdown)
+    if not title:
+        fail("needs_cv_change",
+             "the CV draft has no title line under the name — the builder does not choose a title",
+             {"request_for": "cvWriter",
+              "detail": "Add a title line directly under the '# <Name>' heading, before the contact line: "
+                        "the short, plain role title to show in the CV header and the PDF file names "
+                        "(e.g. **AI-konsulent**). Save the CV again so QA reviews it."})
+        return ""
+    return title
+
+
+# The letter's title line: one whole line in bold.
+LETTER_TITLE_RE = re.compile(r'^\*\*(.+)\*\*$')
+
+
+def letter_draft_title(cl_markdown: str) -> str | None:
+    """The bold title line appWriter wrote, verbatim: the first line that is
+    bold from end to end. None when the letter has none."""
+    for line in cl_markdown.split("\n"):
+        match = LETTER_TITLE_RE.match(line.strip())
+        if match and match.group(1).strip():
+            return match.group(1).strip()
+    return None
+
+
+def required_letter_title(cl_markdown: str) -> str:
+    """The letter's title, shown exactly as appWriter wrote it and QA
+    approved it: the builder never cleans or rewrites it. A letter without
+    one goes back to appWriter (and then QA) rather than being printed
+    without a title."""
+    title = letter_draft_title(cl_markdown)
+    if not title:
+        fail("needs_letter_change",
+             "the cover letter draft has no bold title line — the builder does not choose a title",
+             {"request_for": "appWriter",
+              "detail": "Add the letter's title line, in bold, on its own line after the recipient lines "
+                        "(e.g. **AI-konsulent**). It is printed exactly as written. "
+                        "Save the letter again so QA reviews it."})
+        return ""
+    return title
 
 
 def _is_closing_line(line: str) -> bool:
@@ -793,20 +834,21 @@ def markdown_to_cover_letter_html(markdown_text: str, company: str) -> str:
     title_idx = title_line_idx = None
     for idx, block in enumerate(blocks):
         for li, line in enumerate(block):
-            if re.match(r'^\*\*(.+)\*\*$', line):
+            if LETTER_TITLE_RE.match(line):
                 title_idx, title_line_idx = idx, li
                 break
         if title_idx is not None:
             break
 
     if title_idx is None:
-        # No bold job-title line found — degrade to plain paragraphs so the
-        # letter is still readable rather than empty. (Seen in a handful of
-        # older appWriter letters with no ** marker on the title at all.)
-        return "".join(f"<p>{inline_format(' '.join(b))}</p>\n" for b in blocks)
+        # No bold title line: the run functions refuse such a letter before
+        # rendering, so this only guards a direct call.
+        required_letter_title(markdown_text)
+        return ""
 
     title_block = blocks[title_idx]
-    title_text = clean_letter_title(re.match(r'^\*\*(.+)\*\*$', title_block[title_line_idx]).group(1))
+    # Verbatim: appWriter wrote it and QA approved it.
+    title_text = LETTER_TITLE_RE.match(title_block[title_line_idx]).group(1).strip()
     # Any other lines sharing the title's block (e.g. a company name on the
     # very next line with no blank-line separator) are recipient info too.
     title_block_extra = title_block[:title_line_idx] + title_block[title_line_idx + 1:]
@@ -890,7 +932,7 @@ def contact_rows(contact: dict) -> list[list[dict]]:
     return [row for row in (first, second) if row]
 
 
-def render_html_pair(cv_markdown: str, cl_markdown: str, title: str, company: str) -> tuple[str, str]:
+def render_html_pair(cv_markdown: str, cl_markdown: str, cv_title: str, company: str) -> tuple[str, str]:
     """Markdown -> final CV/letter HTML, deterministically (see module
     docstring). Shared by --candidate and --publish so there is exactly one
     code path that can disagree with itself. Calls fail() (exits) on error;
@@ -918,21 +960,21 @@ def render_html_pair(cv_markdown: str, cl_markdown: str, title: str, company: st
         fail("dependency_missing", f"jinja2/markupsafe not importable: {e}")
         return "", ""
 
-    # User memory rule "self-label as the plain role title, drop 'Senior'":
-    # applied to the CV header/<title> the same way clean_letter_title()
-    # already applies it to the cover letter's title.
-    role_title = plain_role_title(title)
+    # The CV's own title line, verbatim (see required_cv_title()). The CV
+    # header, both <title>s and the PDF names all use it, so what QA
+    # approved is what the employer sees.
+    role_title = cv_title
 
     try:
         env = jinja2.Environment(autoescape=True, keep_trailing_newline=True)
         cv_template_text = (TEMPLATES_DIR / "cv.html.j2").read_text(encoding="utf-8")
         cl_template_text = (TEMPLATES_DIR / "cover_letter.html.j2").read_text(encoding="utf-8")
         cv_html = env.from_string(cv_template_text).render(name=NAME, role_title=role_title, body=Markup(cv_body_html),
-                                                           doc_title=document_name(title, company, "CV"),
+                                                           doc_title=document_name(role_title, company, "CV"),
                                                            contact_rows=contact_rows(CONTACT),
                                                            has_photo=PROFILE_PHOTO.exists())
         cl_html = env.from_string(cl_template_text).render(name=NAME, role_title=role_title, body=Markup(cl_body_html),
-                                                           doc_title=document_name(title, company, "Cover Letter"))
+                                                           doc_title=document_name(role_title, company, "Cover Letter"))
     except OSError as e:
         fail("io_error", f"could not read a template under {TEMPLATES_DIR}: {e}")
         return "", ""
@@ -944,6 +986,8 @@ def render_html_pair(cv_markdown: str, cl_markdown: str, title: str, company: st
 
 
 def run_candidate(sb, args, job_uuid: str, title: str, company: str, cv_markdown: str, cl_markdown: str) -> None:
+    cv_title = required_cv_title(cv_markdown)
+    required_letter_title(cl_markdown)
     slug = slugify(title)
     date_str = datetime.now(timezone.utc).strftime("%Y-%m-%d")
 
@@ -959,7 +1003,7 @@ def run_candidate(sb, args, job_uuid: str, title: str, company: str, cv_markdown
         fail("io_error", f"could not create build directory {out_dir}: {e}")
         return
 
-    cv_html, cl_html = render_html_pair(cv_markdown, cl_markdown, title, company)
+    cv_html, cl_html = render_html_pair(cv_markdown, cl_markdown, cv_title, company)
 
     discard_pdfs(out_dir)
     cv_path = out_dir / "cv.html"
@@ -1041,6 +1085,8 @@ def run_publish(sb, args, job_uuid: str, title: str, company: str, cv_markdown: 
                 pdf_only: bool = False) -> None:
     """--publish, or with `pdf_only` the --pdf mode: every check a publish
     makes, then keep the printed PDFs instead of uploading and flagging."""
+    cv_title = required_cv_title(cv_markdown)
+    required_letter_title(cl_markdown)
     try:
         latest = sb.api.call("get_latest_qa", {"run_id": args.run_id, "job_id": args.job_id})["qa"]
         qa_rows = [latest] if latest else []
@@ -1077,7 +1123,7 @@ def run_publish(sb, args, job_uuid: str, title: str, company: str, cv_markdown: 
     # Re-render the exact same content fresh from the drafts (see the module
     # docstring for why this is a correct freshness check, not a best-effort
     # one) and require an EXACT hash match before touching disk or the server.
-    cv_html, cl_html = render_html_pair(cv_markdown, cl_markdown, title, company)
+    cv_html, cl_html = render_html_pair(cv_markdown, cl_markdown, cv_title, company)
     cv_bytes = cv_html.encode("utf-8")
     cl_bytes = cl_html.encode("utf-8")
     photo_bytes = PROFILE_PHOTO.read_bytes() if PROFILE_PHOTO.exists() else None
@@ -1123,7 +1169,8 @@ def run_publish(sb, args, job_uuid: str, title: str, company: str, cv_markdown: 
 
     try:
         _publish_measured(sb, args, job_uuid, qa, build_evidence, fresh_hashes, out_dir, photo_copied,
-                          cv_path, cl_path, pdf_only, pdf_names(title, company))
+                          cv_path, cl_path, pdf_only,
+                          pdf_names(cv_title, company))
     except SystemExit:
         # Every refusal below exits through fail(); none may leave PDFs behind.
         discard_pdfs(out_dir)

@@ -134,6 +134,8 @@ You MUST follow this exact sequence on every spawn:
 ```markdown
 # <Full Name>
 
+**<role title: short and plain, e.g. "AI-konsulent" or "Data Engineer", never the ad's headline. Required: the builder prints it verbatim in the CV header and the PDF file names, and refuses a draft without it>**
+
 <contact line: email | phone | city | linkedin | github>
 
 ## Summary

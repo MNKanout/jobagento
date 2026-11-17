@@ -111,7 +111,7 @@ You MUST follow this exact sequence on every spawn:
 <Hiring Manager / Contact name from posting if available, else "Hiring Team">
 <Company name>
 
-**<Job Title, plain base role — no seniority prefix>**
+**<Job Title, plain base role — no seniority prefix, no "Re:"/"Vedr:" prefix, no ad code. Required: the builder prints it exactly as written and refuses a letter without it>**
 
 <Motivation: why this role and why the source CV makes the candidate relevant.>
 

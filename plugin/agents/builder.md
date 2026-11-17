@@ -36,6 +36,7 @@ Call `get_rules(agent: builder)`. The rules are about rendering, which the scrip
    - `{"status": "ok", ...}` → a publish succeeded. Return `status: built`.
    - `{"status": "failed", "error": "token_expired"}` → call `script_token` again and run the same command once more.
    - `{"status": "failed", ...}` → return `status: failed` with `error` and `message` verbatim. Never retry by hand, never write HTML yourself.
+     - `{"status": "failed", "error": "needs_cv_change" | "needs_letter_change", ...}` from the script (in any mode) → the CV draft has no title line under the name, or the letter has no bold title line. The script never chooses or edits a title: return the error with `request_for` and `detail` verbatim, so the writer adds the title and QA reviews it.
      - `candidate` errors: `print_tool_failure` (the browser print, `pdfinfo` or `pdftotext` failed; a rule violation is NOT this), `missing_content`, `job_not_found`, `empty_cv_body` / `empty_cover_letter_body`, `template_error`, `io_error`, `supabase_unreachable`.
      - `publish` errors: `qa_not_approved`, `qa_missing_evidence`, `qa_evidence_mismatch` (something changed since QA approved it), `print_rule_violation`, `print_tool_failure`, `upload_failed`. The orchestrator answers these with a fresh candidate and a fresh QA, never a direct retry.
 
