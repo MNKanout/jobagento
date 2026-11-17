@@ -52,6 +52,12 @@ of your own cover letters and a photo. Run it again whenever something changes.
 | `/jobagento:browser-login [url]` | Log in to a job platform once in the plugin's Chrome |
 | `/jobagento:delete-account` | Delete your account and all its data, for good |
 
+**Optional: check in from Claude's chat or voice.** The plugin above is all you
+need. To also ask for updates in the Claude app on your computer or phone ("What's
+waiting on me?", "How did my last run go?"), add a custom connector there with
+`https://mcp.jobagento.com/mcp` and sign in. It reads your data; the agents still
+run in Claude Code.
+
 **Your data.** It is stored in the EU (Supabase, Ireland). See the privacy policy and terms at
 https://mcp.jobagento.com/privacy and `/terms`.
 

@@ -58,3 +58,4 @@ Call `get_settings`. If `setup_needed` is still true, say which `missing` item i
 - what was saved (sections, titles, countries, examples, photo),
 - their plan (Free unless they bought one on the website) and its limits: `runs.limit` jobs a day and `max_agents` agents at once,
 - next: "Run `/jobagento:find-and-apply` to start your first run."
+- one optional extra, said as optional so they don't think it's a second setup: "Nothing else to set up. If you'd like to check in from the Claude app on your computer or phone, by chat or voice, add a custom connector there with `https://mcp.jobagento.com/mcp` and sign in. Then ask things like 'What's waiting on me?' or 'How did my last run go?'"
